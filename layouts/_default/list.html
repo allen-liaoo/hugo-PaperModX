@@ -55,9 +55,11 @@
 {{- $class := "post-entry" }}
 
 {{- $user_preferred := or site.Params.disableSpecial1stPost site.Params.homeInfoParams }}
-{{- if (and $.IsHome (eq $paginator.PageNumber 1) (eq $index 0) (not $user_preferred)) }}
-{{- $class = "first-entry" }}
-{{- else if $term }}
+{{/* Remove priviledged first post, now every post looks the same */}}
+{{/*{{- if (and $.IsHome (eq $paginator.PageNumber 1) (eq $index 0) (not $user_preferred)) }}
+{{- $class = "first-entry" }} */}}
+{{/*{{- else if $term }}*/}}
+{{- if $term }}
 {{- $class = "post-entry tag-entry" }}
 {{- end }}
 
@@ -73,11 +75,19 @@
   </header>
   {{- if (ne (.Param "hideSummary") true) }}
   <section class="entry-content">
+    {{/*
     {{ if .Description }}
       <p>{{ .Description | plainify | htmlUnescape }}</p>
     {{ else }}
       <p>{{ .Summary | plainify | htmlUnescape }}{{ if .Truncated }}...{{ end }}</p>
     {{ end }}
+    */}}
+    {{ if .Description }}
+      <div class="post-description">
+        <blockquote><i>{{ .Description | markdownify | safeHTML }}</i></blockquote>
+      </div>
+    {{ end }}
+    <p>{{ .Content | markdownify | safeHTML | truncate 1000 }}...</p>
   </section>
   {{- end }}
   {{- if not (.Param "hideMeta") }}
